@@ -11,7 +11,7 @@ interface UserLocation {
     };
   }
 
-  import { useState } from 'react';
+  import { useEffect, useState } from 'react';
   
   import MapContainer from '@/components/maps/Map';
   
@@ -45,11 +45,12 @@ interface UserLocation {
         console.error('Geolocation is not supported by this browser.');
       }
     };
+
+    useEffect(()=>{getUserLocation()} , [])
   
     return (
       <div>
         <h1>Delivery Location</h1>
-        <button onClick={getUserLocation} style={{padding:20 , borderRadius:20 , color:"lightblue"}}><span style={{textEmphasisColor:"black"}}>Get My Location</span></button>
         {userLocation && (
           <p>
             Your current location: {userLocation.placeName} 

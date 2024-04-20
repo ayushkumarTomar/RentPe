@@ -148,6 +148,24 @@ class AppwriteService {
         }
     }
 
+    async getBorrowed(userID:string){
+        try {
+            return (await this.database.listDocuments(APPWRITE_DATABASE_ID , config.productsCollectionId , [Query.equal('borrower' , [userID])])).documents
+        } catch (error) {
+            console.log("borrow error ::: " , error)
+        }
+
+    }
+
+    async getRented(userID:string){
+        try {
+            return (await this.database.listDocuments(APPWRITE_DATABASE_ID , config.productsCollectionId , [Query.equal('owner' , [userID])])).documents
+        } catch (error) {
+            console.log("borrow error ::: " , error)
+        }
+
+    }
+
 }
 
 export default AppwriteService

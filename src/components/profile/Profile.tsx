@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import { FaUserCircle, FaComments, FaCog, FaUsers, FaStar } from 'react-icons/fa';
+import { GiRotaryPhone } from "react-icons/gi";
 import { Link } from 'react-router-dom';
 import defaultUser from "../../assets/defaultUser.png";
-import './index.css'; // Import your custom CSS for styling
-import { GiRotaryPhone } from "react-icons/gi";
+import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
+import { FaUserCircle, FaComments, FaCog, FaUsers, FaStar } from 'react-icons/fa';
+import './index.css';
 import Navbar from '../navbar/Navbar';
+import useAuthStore from '@/store/auth';
+import AppwriteService from '@/services/appwrite';
 
-
-function SideBar({username} : {username:string}) {
+function SideBar({ username }: { username: string }) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Adjust this breakpoint as needed
+      setIsMobile(window.innerWidth <= 768);
     };
 
-    handleResize(); // Check initial screen size
-    window.addEventListener('resize', handleResize); // Add resize listener
+    handleResize();
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize); // Clean up on unmount
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -50,13 +51,30 @@ function SideBar({username} : {username:string}) {
   );
 }
 
-export {SideBar};
+export { SideBar };
 
 export default function Profile() {
+  const { user } = useAuthStore();
+  const [borrow, setBorrow] = useState<any[]>([]);
+  const [rented, setRented] = useState<any[]>([]);
+  const appwrite = new AppwriteService();
+
+  useEffect(() => {
+    async function fetchData() {
+      if (user) {
+        const borrowed = await appwrite.getBorrowed(user?.$id || "none");
+        if (borrowed) setBorrow(borrowed);
+
+        const rented = await appwrite.getRented(user?.$id || "none");
+        if (rented) setRented(rented);
+      }
+    }
+
+    fetchData();
+  }, [user]);
 
 
 
-  const user = {username: "Ayush" , phoneNumber: "+919929419734"}
   return (
     <>
     {/* <Navbar /> */}
@@ -74,7 +92,7 @@ export default function Profile() {
           <span className="visually-hidden">Next</span>
         </button>
       </div>
-      <SideBar username={user.username} />
+      <SideBar username={user?.name ? user.name : "Ayush"} />
       <div className="other-components">
         <div className="card" style={{ width: 'auto', height: 'auto', padding: 40 }}>
           <div className="row no-gutters">
@@ -88,10 +106,10 @@ export default function Profile() {
             </div>
             <div className="col-md-8">
               <div className="card-body">
-                <h1 className="card-title" style={{ fontSize: '2.5rem', marginBottom: '20px' }}>{user.username}</h1> {/* Increased font size and added margin */}
+                <h1 className="card-title" style={{ fontSize: '2.5rem', marginBottom: '20px' }}>{user?.name ? user.name : "Ayush"}</h1> {/* Increased font size and added margin */}
                 <div className="d-flex align-items-center" style={{ marginBottom: '20px' }}> {/* Use flexbox for alignment and added margin */}
                   <GiRotaryPhone style={{ marginRight: '10px' }} /> {/* Icon */}
-                  <p className="card-text" style={{ marginBottom: '0' }}>{user.phoneNumber}</p> {/* Phone number */}
+                  <p className="card-text" style={{ marginBottom: '0' }}>{user?.phone}</p> {/* Phone number */}
                 </div>
                 <div className="d-flex justify-content-start"> {/* Use flexbox to space buttons */}
                  <Link to ='/'> <button type="button" className="btn btn-primary" style={{ marginRight: '10px' }}>Borrow</button></Link>
@@ -112,23 +130,22 @@ export default function Profile() {
               <table className="table table-bordered table-striped"> {/* Improved table style */}
                 <thead className="table-head">
                   <tr>
-                    <th>ID</th>
                     <th>Name</th>
+                    <th>Owner</th>
                     <th>Price</th>
+                    <th>Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Item 1</td>
-                    <td>$15</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Item 2</td>
-                    <td>$25</td>
-                  </tr>
-                  {/* Add more rows as needed */}
+                  {borrow.map((element)=>(
+                    <tr key={element.$id}>
+                      <td>{element?.name}</td>
+                      <td>{element.owner || "Pending"}</td>
+                      <td>{element.price}</td>
+                      <td>{element.date}</td>
+
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -137,23 +154,22 @@ export default function Profile() {
               <table className="table table-bordered table-striped"> {/* Improved table style */}
                 <thead className="table-head">
                   <tr>
-                    <th>ID</th>
                     <th>Name</th>
+                    <th>Deal With</th>
                     <th>Price</th>
+                    <th>Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Item 1</td>
-                    <td>$15</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Item 2</td>
-                    <td>$25</td>
-                  </tr>
-                  {/* Add more rows as needed */}
+                  {rented.map((element)=>(
+                    <tr key={element.$id}>
+                    <td>{element?.name}</td>
+                      <td>{element.borrower || "Pending"}</td>
+                      <td>{element.price}</td>
+                      <td>{element.date}</td>
+
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

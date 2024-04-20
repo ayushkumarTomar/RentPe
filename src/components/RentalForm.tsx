@@ -1,6 +1,6 @@
 //@ts-ignore
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import DeliveryLocation from './maps/Delivery';
 
@@ -10,6 +10,7 @@ import config from '@/config/config';
 import { ID } from 'appwrite';
 import LoadingOverlay from 'react-loading-overlay-ts';
 import useAuthStore from '@/store/auth';
+import { toast } from 'react-toastify';
 
 
 interface Position {
@@ -25,8 +26,13 @@ const RentalForm = () => {
   const [upload, setUpload] = useState(false)
   const appwrite = new AppwriteService()
 
-  const {user} = useAuthStore()
+  let imagesArr = []
 
+
+  const [forceUpdate, setForceUpdate] = useState(false);
+
+
+  const {user} = useAuthStore()
 
   const [imagesId , setImagesId] = useState<string[]>([])
   const { register, handleSubmit, formState: { errors } , reset } = useForm();
@@ -36,6 +42,19 @@ const RentalForm = () => {
   const [images, setImages] = useState<string[]>([]);
 // @ts-ignore
   const onSubmit = async(data) => {
+
+
+    if(images.length==0){
+      toast("Please Upload images 📷🎥!!.", { autoClose: 3000 , position: "top-center" })
+      return
+    }
+
+    if(tags.length==0){
+      toast("Please add atleast 1 tag!!. 🏷️🏷️", { autoClose: 3000 , position: "top-center" })
+      return
+    }
+
+
 
     let longitude , lattitude;
 
@@ -55,23 +74,39 @@ const RentalForm = () => {
         })}
 
 
-       await uploadImages()
+       const imagesID = await uploadImages()
 
-       console.log("uplo0ading images    ")
+       console.log("images iD func :: " , imagesID)
+        if(imagesID){
+       setForceUpdate(prevState => !prevState);
+
 
        const location = [longitude , lattitude]
         //@ts-ignore
-        console.log(formDataWithImages)
+        // console.log(formDataWithImages)
 
         const productData = {...formDataWithImages}
-        productData.images = imagesId
+        productData.images = imagesID
         productData.location = location
         productData.owner = user?.$id
         productData.tags = tags
 
+        console.log(productData)
+
+        console.log("images id ::: " , imagesID)
+
 
 
        await appwrite.createProduct(productData)
+
+       toast("Successfully listed product 🟢🟢", { autoClose: 5000 , position: "top-center" })
+        }
+        else{
+
+          toast("Something went wrong ❌❌", { autoClose: 5000 , position: "top-center" })
+
+
+        }
 
     
   };
@@ -88,25 +123,31 @@ const RentalForm = () => {
     if(files.length>0){
       setUpload(true)
 
+      const imagesID = []
+
       for(let i = 0 ; i < files.length ; i ++){
 
-        const iddd = ID.unique()
+        const xd =await appwrite.storage.createFile(config.bucketId , ID.unique()  , files[i])
+        console.log("Getting image id ::: " , xd.$id)
 
-        setImagesId(prev=>[...prev , iddd])
+        imagesID.push(xd.$id)
 
-        await appwrite.storage.createFile(config.bucketId , iddd  , files[i])
 
       }
       
-
       setUpload(false)
       reset()
       setImages([])
       setTags([])
 
 
+      return imagesID
+      
 
-    }}
+
+
+    }
+  else return false}
 
 
     

@@ -9,6 +9,10 @@ import Login from './pages/Login'
 import Product from './pages/Product'
 import Profile from './components/profile/Profile';
 import ListItem from './pages/ListItem';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
 
 
@@ -16,6 +20,8 @@ function App() {
 	return (
 		
 		<BrowserRouter>
+		        <ToastContainer />
+
 		{/* Wrap the routes with AuthProvider */}
 		<AuthProvider>
 		  <Routes>

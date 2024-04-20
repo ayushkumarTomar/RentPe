@@ -76,10 +76,14 @@
 // export { ImageUploader };
 import RentalForm from '@/components/RentalForm';
 
+import Avatar from 'react-avatar';
+
+
 import { SideBar } from '@/components/profile/Profile';
 import Navbar from '@/components/navbar/Navbar';
+import useAuthStore from '@/store/auth';
 function ListItem() {
-    const user = { username: "Ayush", phoneNumber: "+919929419734" }
+    const {user} = useAuthStore()
     return (
         <>
             {/* <Navbar /> */}
@@ -88,18 +92,23 @@ function ListItem() {
             </div>
             <div className="profile-container" style={{ marginTop: 80 }}>
 
-                <SideBar username={user.username} />
+                <SideBar username={user?.name ? user.name : "Ayush"} />
                 <div className="other-components">
                     <div className="card" style={{ width: 'auto', height: 'auto', padding: 40 }}>
                         <h1 className="card-title" style={{ fontSize: '2.5rem', marginBottom: '20px', fontSizeAdjust: 70, alignSelf: 'center' }}>List Product</h1>
                         <div className="row no-gutters">
                             <div className="col-md-4">
                                 <img
+                                    
                                     src="https://hips.hearstapps.com/hmg-prod/images/robert-pattinson-as-batman-bruce-wayne-in-the-batman-1645186686.jpeg?crop=0.607xw:0.911xh;0.318xw,0.0102xh&resize=640:*"
                                     className="card-img-top rounded-circle"
                                     alt="ProfileIcon"
                                     style={{ width: '100%', maxWidth: '200px', height: 'auto', objectFit: 'cover' }} // Set max-width to limit the size
                                 />
+                                {/* <div>
+                                <Avatar round={true} name = {user?.name ? user.name : "Ayush"} style={{ width: '100%', maxWidth: '200px', height: 'auto', objectFit: 'cover' }} size="150" />
+                                </div> */}
+
                             </div>
                             <div className="col-md-8">
                                 <RentalForm />
