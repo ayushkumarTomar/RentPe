@@ -9,6 +9,7 @@ import AppwriteService from '@/services/appwrite';
 import config from '@/config/config';
 import { ID } from 'appwrite';
 import LoadingOverlay from 'react-loading-overlay-ts';
+import useAuthStore from '@/store/auth';
 
 
 interface Position {
@@ -22,50 +23,86 @@ const categories = ['Electronics', 'Furniture', 'Games' ,'Clothing', 'Books', 'S
 const RentalForm = () => {
 
   const [upload, setUpload] = useState(false)
+  const appwrite = new AppwriteService()
+
+  const {user} = useAuthStore()
 
 
   const [imagesId , setImagesId] = useState<string[]>([])
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } , reset } = useForm();
   
   const [tags, setTags] = useState<string[]>([]); // State for tags
   const [tagInput, setTagInput] = useState<string>(''); // State for tag input value
   const [images, setImages] = useState<string[]>([]);
 // @ts-ignore
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
+
+    let longitude , lattitude;
+
     // Combine form data with images before submission
-    const formDataWithImages = { ...data, images };
+    const formDataWithImages = { ...data};
     console.log(formDataWithImages);
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         // Success callback
         async (position: Position) => {
-          const { latitude, longitude } = position.coords;
-          console.log(longitude , latitude)
+
+          longitude = String(position.coords.longitude)
+          lattitude = String(position.coords.latitude)
+          // const { latitude, longitude } = position.coords;
+          console.log(longitude , lattitude)
         })}
+
+
+       await uploadImages()
+
+       console.log("uplo0ading images    ")
+
+       const location = [longitude , lattitude]
+        //@ts-ignore
+        console.log(formDataWithImages)
+
+        const productData = {...formDataWithImages}
+        productData.images = imagesId
+        productData.location = location
+        productData.owner = user?.$id
+        productData.tags = tags
+
+
+
+       await appwrite.createProduct(productData)
 
     
   };
 
   const uploadImages = async()=>{
 
-    const appwrite = new AppwriteService()
     //@ts-ignore
     const files = document.getElementById("uploader")?.files;
+
+    console.log("Fi9leess :: " , files)
+
+    
 
     if(files.length>0){
       setUpload(true)
 
-      files.forEach(async(element:any , index:number)=>{
+      for(let i = 0 ; i < files.length ; i ++){
 
-        setImagesId(prev=>[...prev , ID.unique()])
+        const iddd = ID.unique()
 
-        await appwrite.storage.createFile(config.bucketId , imagesId[index]  , files[index])
+        setImagesId(prev=>[...prev , iddd])
 
-      })
+        await appwrite.storage.createFile(config.bucketId , iddd  , files[i])
 
+      }
+      
 
       setUpload(false)
+      reset()
+      setImages([])
+      setTags([])
 
 
 

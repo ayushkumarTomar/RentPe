@@ -5,6 +5,7 @@ import { ID , Client , Databases , Account ,Query , Storage } from 'appwrite';
 
 
 import config from '@/config/config';
+import { MdLocationPin } from 'react-icons/md';
 
 
 type CreateUserAccount = {
@@ -16,6 +17,33 @@ type LoginUserAccount = {
     email: string;
     password: string;
 }
+
+type Category =
+  | 'Electronics'
+  | 'Furniture'
+  | 'Games'
+  | 'Clothing'
+  | 'Books'
+  | 'Sports'
+  | 'Shoes'
+  | 'Mechanical'
+  | 'Home Appliances'
+  | 'Music'
+  | 'Event organization'
+  | 'Others';
+
+type CreateProduct = {
+    name: string;
+    dateOfProduct: string;
+    description: string;
+    price: number;
+    category: Category
+    tags: string[];
+    owner: string;
+    images: string[];
+    location: string[];
+  };
+  
 
 
 const appwriteClient = new Client()
@@ -91,6 +119,32 @@ class AppwriteService {
             console.log("Appwrite service :: logoutError() :: " + error);
             return false
 
+        }
+    }
+
+
+    async createProduct({name ,dateOfProduct , description , price , category , tags , images , location , owner } : CreateProduct){
+        try {
+
+            await this.database.createDocument(APPWRITE_DATABASE_ID , config.productsCollectionId , ID.unique()  , {
+
+                name , 
+                date: new Date() ,
+                dateOfProduct ,
+                description , 
+                price , 
+                category , 
+                tags,
+                images ,
+                location ,
+                owner
+
+            })
+
+        } catch (error) {
+            console.log("creating product error :: " , error)
+            return false
+            
         }
     }
 
