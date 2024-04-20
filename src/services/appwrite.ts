@@ -1,7 +1,7 @@
 
 
 
-import { ID , Client , Databases , Account ,Query } from 'appwrite';
+import { ID , Client , Databases , Account ,Query , Storage } from 'appwrite';
 
 
 import config from '@/config/config';
@@ -27,7 +27,8 @@ const APPWRITE_DATABASE_ID:string = config.databaseId
 
 class AppwriteService {
     account;
-    database
+    database;
+    storage;
 
     constructor(){
         appwriteClient
@@ -36,6 +37,8 @@ class AppwriteService {
 
         this.account = new Account(appwriteClient)
         this.database = new Databases(appwriteClient)
+
+        this.storage = new Storage(appwriteClient)
     }
 
     //create a new record of user inside appwrite

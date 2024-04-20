@@ -17,6 +17,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const loggedIn = await appwrite.getCurrentUser();
     
           if (loggedIn) {
+            console.log("Auth provider logged in ")
             login(loggedIn);
           }
           toggleLoading();

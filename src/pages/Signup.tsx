@@ -2,9 +2,13 @@ import { Link } from "react-router-dom";
 import bannerHero from "../assets/bannerHero.jpg";
 import Logo from "@/components/Logo";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useAuthStore from "@/store/auth";
+import { useState , useEffect } from "react";
 function Signup() {
+  const navigator = useNavigate()
+  const {login , user} = useAuthStore()
+  useEffect(()=> {  if(user) navigator("/")} , [])
 
 
     const [signingUp , setSigningUp] = useState(false)

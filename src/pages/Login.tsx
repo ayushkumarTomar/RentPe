@@ -1,9 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import bannerHero from "../assets/bannerHero.jpg";
 import Logo from "@/components/Logo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAuthStore from "@/store/auth";
+import AppwriteService from "@/services/appwrite";
 function Login() {
 
+
+
+
+  const navigator = useNavigate()
+  const {login , user} = useAuthStore()
+  useEffect(()=> {  if(user) navigator("/")} , [])
 
 
   const [loginCred , setLoginCred] = useState({
@@ -13,11 +21,28 @@ function Login() {
 
   const [loggingIn , setLoggingIn] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>)=>{
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
     setLoggingIn(true)
-    console.log(loginCred)
-    console.log("Subkmmitt form")
+
+    const appwrite = new AppwriteService()
+
+    const chkLogin = await appwrite.login(loginCred)
+
+    // console.log("Chk logijn ::: " , chkLogin)
+
+    if(chkLogin) {
+      const loginData = await appwrite.getCurrentUser()
+
+      // console.log("lgoin data ::< " , loginData)
+      if(loginData) {
+        navigator('/')        
+        login(loginData)
+      
+      }
+    }
+    
+
   }
 
     return (

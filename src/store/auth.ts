@@ -29,8 +29,7 @@ type AuthStore = {
 const useAuthStore = create<AuthStore>((set , get) => ({
     user: null ,
 
-    
-    isLoggedIn: true,
+    isLoggedIn: false,
     login: (user:User) => {
 
         set({user:user})
