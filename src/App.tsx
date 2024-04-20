@@ -8,6 +8,7 @@ import Signup from './pages/Signup'
 import Login from './pages/Login'
 import Product from './pages/Product'
 import Profile from './components/profile/Profile';
+import ListItem from './pages/ListItem';
 function App() {
 
 
@@ -25,6 +26,7 @@ function App() {
               <Route path="/" element={<Home/>}/>
               <Route path="/product" element={<Product/>}/>
 			  <Route path="/profile" element={<Profile/>}/>
+			  <Route path="/list-item" element={<ListItem/>}/>
 
 			</Route>
 		  </Routes>
