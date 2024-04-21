@@ -1,6 +1,6 @@
 import AppwriteService from "@/services/appwrite";
 import { useEffect, useState } from "react";
-import { FaHome, FaMusic, FaBook, FaGamepad, FaBlackTie, FaFootballBall, FaShoePrints, FaScrewdriver, FaAccessibleIcon, FaMixer } from "react-icons/fa";
+import { FaHome, FaMusic, FaBook, FaGamepad, FaBlackTie, FaFootballBall, FaShoePrints, FaScrewdriver, FaAccessibleIcon, FaMixer, FaBed } from "react-icons/fa";
 import TrendingList from "./TrendingList";
 
 interface Product {
@@ -65,15 +65,15 @@ const CategoriesScroll: React.FC = () => {
           ? categories.slice(0, 9).map((category, index) => (
               <div key={index} className="flex flex-col items-center justify-center">
                 <div className="flex items-center justify-center w-20 h-20 bg-gray-200 rounded-full mx-2 sm:mx-4">
-                  {index === 0 && <FaHome className="text-3xl text-gray-600" onClick={() => updateProducts(0)} />}
-                  {index === 1 && <FaMusic className="text-3xl text-gray-600" onClick={() => updateProducts(1)} />}
-                  {index === 2 && <FaBook className="text-3xl text-gray-600" onClick={() => updateProducts(2)} />}
-                  {index === 3 && <FaGamepad className="text-3xl text-gray-600" onClick={() => updateProducts(3)} />}
-                  {index === 4 && <FaBlackTie className="text-3xl text-gray-600" onClick={() => updateProducts(4)} />}
+                  {index === 0 && <FaMixer className="text-3xl text-gray-600" onClick={() => updateProducts(0)} />}
+                  {index === 1 && <FaBed className="text-3xl text-gray-600" onClick={() => updateProducts(1)} />}
+                  {index === 2 && <FaGamepad className="text-3xl text-gray-600" onClick={() => updateProducts(2)} />}
+                  {index === 3 && <FaBlackTie className="text-3xl text-gray-600" onClick={() => updateProducts(3)} />}
+                  {index === 4 && <FaBook className="text-3xl text-gray-600" onClick={() => updateProducts(4)} />}
                   {index === 5 && <FaFootballBall className="text-3xl text-gray-600" onClick={() => updateProducts(5)} />}
                   {index === 6 && <FaShoePrints className="text-3xl text-gray-600" onClick={() => updateProducts(6)} />}
                   {index === 7 && <FaScrewdriver className="text-3xl text-gray-600" onClick={() => updateProducts(7)} />}
-                  {index === 8 && <FaMixer className="text-3xl text-gray-600" onClick={() => updateProducts(8)} />}
+                  {index === 8 && <FaHome className="text-3xl text-gray-600" onClick={() => updateProducts(8)} />}
                 </div>
                 <p className="text-xs mt-2 text-center">{category}</p>
               </div>
@@ -81,9 +81,9 @@ const CategoriesScroll: React.FC = () => {
           : categories.slice(0, 2).map((category, index) => (
               <div key={index} className="flex flex-col items-center justify-center">
                 <div className="flex items-center justify-center w-20 h-20 bg-gray-200 rounded-full mx-2 sm:mx-4">
-                  {index === 0 && <FaHome className="text-3xl text-gray-600" onClick={() => updateProducts(0)} />}
-                  {index === 1 && <FaMusic className="text-3xl text-gray-600" onClick={() => updateProducts(1)} />}
-                  {index === 2 && <FaBook className="text-3xl text-gray-600" onClick={() => updateProducts(2)} />}
+                  {index === 0 && <FaMixer className="text-3xl text-gray-600" onClick={() => updateProducts(0)} />}
+                  {index === 1 && <FaBed className="text-3xl text-gray-600" onClick={() => updateProducts(1)} />}
+                  {index === 2 && <FaGamepad className="text-3xl text-gray-600" onClick={() => updateProducts(2)} />}
                 </div>
                 <p className="text-xs mt-2 text-center">{category}</p>
               </div>
