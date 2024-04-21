@@ -17,6 +17,7 @@ type LoginUserAccount = {
     email: string;
     password: string;
 }
+const wishlistCollection = "662429a0204b20005307"
 
 const userCollectionId = "6624da9ecac2ea20ae15"
 
@@ -283,6 +284,45 @@ class AppwriteService {
                 console.log("Error getting chat :: " ,error)
                 return false
         }
+    }
+
+    async addWishList(userId:string , productId:string){
+        try {
+
+            const user = (await this.database.listDocuments(APPWRITE_DATABASE_ID , wishlistCollection , [Query.equal("user" , [userId])])).documents[0]
+            console.log("wishlist ::: " , user)
+            const productID = user.$id
+
+            const oldList = await this.database.getDocument(APPWRITE_DATABASE_ID , wishlistCollection ,productID)
+
+
+            console.log("oldList ::: " , oldList)
+
+
+            const newList = [...oldList.Products , productId ]
+
+            return await this.database.updateDocument(APPWRITE_DATABASE_ID , wishlistCollection , oldList.$id  ,{
+                Products : newList
+            })
+
+            
+        } catch(error) {
+            console.log("error ::: " , error)
+        }
+    }
+
+
+    async getWishList(userId:string){
+        const xd =(await this.database.listDocuments(APPWRITE_DATABASE_ID , wishlistCollection , [Query.equal("user" , [userId])])).documents[0]
+        console.log(xd)
+        return xd
+    }
+
+    async getProductIndi(productId : string){
+
+        const xd = await this.database.getDocument(APPWRITE_DATABASE_ID , config.productsCollectionId , productId)
+        console.log("product Indi ::" , xd)
+        return xd
     }
 
 }

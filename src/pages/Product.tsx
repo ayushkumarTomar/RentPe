@@ -7,6 +7,7 @@ import config from '@/config/config';
 import './index.css'
 import Navbar from '@/components/navbar/Navbar';
 import useAuthStore from '@/store/auth';
+import { toast } from 'react-toastify';
 
 interface RouteParams extends Params {
   productId: string;
@@ -44,7 +45,13 @@ const ProductPage = () => {
   }, [productId]);
   const navigor = useNavigate()
 
+  const addWishList = async()=>{
+    if(user && productDetails){
+    await appwrite.addWishList(user?.$id , productDetails.$id)
+    toast("Added Wishlist 🟢🟢", { autoClose: 3000 , position: "top-center" })
+  }
 
+  }
   const borrowNow = async()=>{
     console.log("Reached herere" , productDetails.owner  , ":::: ", user?.$id )
     await appwrite.getChat(productDetails.owner , user?.$id || "null")
@@ -125,7 +132,7 @@ const ProductPage = () => {
               </div>
               <h3 className="mb-3">INR {productDetails.price>2000 ? productDetails.price/10 : productDetails.price} per Day</h3>
               <div className="mb-4">
-                <button className="btn btn-primary me-2" style={{ flexDirection: 'row' }}>
+                <button className="btn btn-primary me-2" style={{ flexDirection: 'row' }} onClick={addWishList}>
                   <FaHeart className="me-1" />
                   Add to WishList
                 </button>

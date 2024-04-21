@@ -18,6 +18,7 @@ import NotFoundPage from './pages/NotFound';
 
 import Chat from './pages/Chat';
 
+import WishlistPage from './pages/WishList';
 function App() {
 
 
@@ -46,6 +47,7 @@ function App() {
 			  <Route path="/profile" element={<Profile/>}/>
 			  <Route path="/list-item" element={<ListItem/>}/>
 			  <Route path="/chat" element={<Chat/>}/>
+			  <Route path="/wishList" element={<WishlistPage/>}/>
 
 			</Route>
 		  </Routes>
