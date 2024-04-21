@@ -15,7 +15,7 @@ const TrendingCard = ({ product }: any) => {
       {/* Product Image */}
       <div className="w-full h-44 overflow-hidden rounded-lg">
         <img
-          src={String(appwrite.storage.getFilePreview(config.bucketId, product.images[0]))}
+          src={String(appwrite.storage.getFileView(config.bucketId, product.images[0]))}
           alt={product.name}
           className="object-cover w-full h-full transform hover:scale-105 transition duration-300"
         />

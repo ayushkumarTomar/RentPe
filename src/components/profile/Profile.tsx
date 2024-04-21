@@ -41,7 +41,7 @@ function SideBar({ username }: { username: string }) {
             {!isMobile && <span>{username}</span>}
           </div>
           <MenuItem icon={<FaUserCircle />} >Account</MenuItem>
-          <MenuItem icon={<FaComments />} >Chat</MenuItem>
+          <Link to ="/chat"><MenuItem icon={<FaComments />} >Chat</MenuItem></Link>
           <MenuItem icon={<FaCog />} >Settings</MenuItem>
           <MenuItem icon={<FaUsers />} >Customer Support</MenuItem>
           <MenuItem icon={<FaStar />} >Reviews</MenuItem>
@@ -88,14 +88,14 @@ export default function Profile() {
     </div>
     <div className="profile-container" style={{marginTop:80}}>
       <div className="carousel-control-buttons"> {/* Container for carousel control buttons */}
-        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+        {/* <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
           <span className="carousel-control-prev-icon" aria-hidden="true"></span>
           <span className="visually-hidden">Previous</span>
         </button>
         <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
           <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Next</span>
-        </button>
+          <span className="visually-hidden">Next</span> */}
+        {/* </button> */}
       </div>
       <SideBar username={user?.name ? user.name : "Ayush"} />
       <div className="other-components">
@@ -148,7 +148,7 @@ export default function Profile() {
                     <tr key={element.$id}>
                       <td>{element?.name}</td>
                       <td>{element.owner || "Pending"}</td>
-                      <td>{element.price>2000 ? (element.price/0).toFixed(0): element.price}</td>
+                      <td>{element.price>2000 ? (element.price/40).toFixed(0): element.price}</td>
                       <td>{element.date}</td>
 
                     </tr>
@@ -172,7 +172,7 @@ export default function Profile() {
                     <tr key={element.$id}>
                     <td>{element?.name}</td>
                       <td>{element.borrower || "Pending"}</td>
-                      <td>{element.price>2000 ? (element.price/0).toFixed(0) : element.price}</td>
+                      <td>{element.price>2000 ? (element.price/40).toFixed(0) : element.price}</td>
                       <td>{element.date}</td>
 
                     </tr>

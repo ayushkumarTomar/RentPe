@@ -4,3 +4,76 @@
     margin-bottom: 10px;
   }
   
+
+
+  .profile-container {
+    display: flex;
+  }
+  
+  .custom-sidebar {
+    background-color: #f8f9fa; /* Off-white background color */
+    max-width: 250px; /* Set a fixed width for the sidebar */
+    flex-shrink: 0; /* Prevent the sidebar from shrinking */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  }
+  
+  .sidebar-top {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+  }
+  
+  .other-components {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  
+  
+  .icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff; /* White background for icon container */
+    border-radius: 50%; /* Rounded border */
+    margin-right: 10px;
+  }
+  
+  .sidebar-icon {
+    color: #007bff; /* Icon color */
+    font-size: 20px; /* Icon size */
+  }
+  
+  /* Style for menu items */
+  .menu-item {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .menu-item:hover {
+    background-color: #e9ecef; /* Hover background color */
+  }
+  .ps-sidebar-root{
+    position: sticky !important;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    border: 0 !important;
+  }
+  
+  .ps-menu-root{
+    color: black !important;
+  }
+  
+  .ps-menu-button:hover {
+    background-color: lightskyblue  !important;
+    color: black  !important;
+  }
+  
+  .ps-submenu-content {
+    color: black !important;
+    background-color: red  !important;
+  }

@@ -6,6 +6,7 @@ import AppwriteService from '@/services/appwrite';
 import config from '@/config/config';
 import './index.css'
 import Navbar from '@/components/navbar/Navbar';
+import useAuthStore from '@/store/auth';
 
 interface RouteParams extends Params {
   productId: string;
@@ -19,7 +20,7 @@ const ProductPage = () => {
   const [productDetails, setProductDetails] = useState<any>();
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const {user} = useAuthStore()
   useEffect(() => {
     async function fetchData() {
       try {
@@ -41,7 +42,28 @@ const ProductPage = () => {
     }
     fetchData();
   }, [productId]);
+  const navigor = useNavigate()
 
+
+  const borrowNow = async()=>{
+    console.log("Reached herere" , productDetails.owner  , ":::: ", user?.$id )
+    await appwrite.getChat(productDetails.owner , user?.$id || "null")
+
+    
+    navigor("/chat")
+  }
+  const [owner , setOwner] = useState("")
+  useEffect(()=>{
+    ownerName()
+  } , [productDetails])
+  const ownerName = async()=>{
+    if(productDetails)
+    {
+      // console.log
+      const anmem =await appwrite.getUsername(productDetails.owner)
+
+    setOwner(anmem)}
+  }
   return (
     <LoadingOverlay
       active={loading}
@@ -107,12 +129,16 @@ const ProductPage = () => {
                   <FaHeart className="me-1" />
                   Add to WishList
                 </button>
-                <button className="btn btn-outline-primary">
-                  Buy Now
+                <button className="btn btn-outline-primary" onClick={borrowNow}>
+                  BorrowNow
                 </button>
               </div>
               <p className="text-muted">
                 {productDetails.description}
+              </p>
+
+              <p style={{fontSize:30}} className="text-muted">
+                SOLD By : {owner}
               </p>
               <p className="text-muted">Category: {productDetails.category}</p>
             </div>

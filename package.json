@@ -12,6 +12,7 @@
   "dependencies": {
     "@chatscope/chat-ui-kit-react": "^2.0.3",
     "@maptiler/sdk": "^2.0.1",
+    "@minchat/react-chat-ui": "^0.16.2",
     "@progress/kendo-react-conversational-ui": "^7.4.0",
     "@react-google-maps/api": "^2.19.3",
     "@tomtom-international/web-sdk-plugin-searchbox": "^3.2.0",

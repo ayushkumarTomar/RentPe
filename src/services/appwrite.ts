@@ -18,6 +18,8 @@ type LoginUserAccount = {
     password: string;
 }
 
+const userCollectionId = "6624da9ecac2ea20ae15"
+
 type Category =
   | 'Electronics'
   | 'Furniture'
@@ -57,11 +59,13 @@ class AppwriteService {
     account;
     database;
     storage;
-
+    client;
     constructor(){
         appwriteClient
         .setEndpoint(APPWRITE_ENDPOINT)
         .setProject(APPWRITE_PROJECT_ID)
+
+        this.client = appwriteClient
 
         this.account = new Account(appwriteClient)
         this.database = new Databases(appwriteClient)
@@ -71,6 +75,15 @@ class AppwriteService {
 
     //create a new record of user inside appwrite
 
+
+
+    async getUsername(userId:string){
+
+        const x = (await this.database.listDocuments(APPWRITE_DATABASE_ID , userCollectionId , [Query.equal("id" , [userId])])).documents[0].name
+        console.log(x)
+        return x
+        // return "Ayush"
+    }
     async createAccount({email, password, name}: CreateUserAccount){
         try {
             const userAccount = await this.account.create(
@@ -207,16 +220,61 @@ class AppwriteService {
         
     }
 
+
+    async getConvo(user:string){
+        try {
+
+            const convos1 = (await this.database.listDocuments(APPWRITE_DATABASE_ID , config.chatCollectionId , [Query.equal("owner" , [user])])).documents
+            const convos2  = (await this.database.listDocuments(APPWRITE_DATABASE_ID , config.chatCollectionId , [Query.equal("borrower" , [user])])).documents
+            const convos = [...convos1 , ...convos2]
+            console.log("Convo 1 :: " , convos1)
+            console.log("Convo 2 :: " , convos2)
+
+            console.log("convo  inside db:: " , convos)
+
+            return convos
+            
+        } catch (error) {
+
+            console.log("Errror getting convos :: " , error)
+            return false
+            
+        }
+    }
+    async sendMsg(documentId:string , msg:string){
+        try {
+            const oldMsgs = await this.database.getDocument(APPWRITE_DATABASE_ID , config.chatCollectionId , documentId)
+            const newA = await this.database.updateDocument(APPWRITE_DATABASE_ID , config.chatCollectionId , documentId , {
+                msgs: [...oldMsgs.msgs , msg]
+            })
+
+            return newA
+        } catch (error) {
+            console.log("Error sending msg:: " ,  error)
+            
+        }
+    }
+
+    
     async getChat(owner:string , borrower:string){
         try {
             
 
             const data = await this.database.listDocuments(APPWRITE_DATABASE_ID , config.chatCollectionId , [Query.equal("owner" , [owner]) , Query.equal("borrower" , [borrower])])
+            console.log("chat data found ::: " , data)
             if(data.total<1){
+
+
+                const ownerName = await this.getUsername(owner)
+                const borrowerName = await this.getUsername(borrower)
                 const data2 = await this.database.createDocument(APPWRITE_DATABASE_ID , config.chatCollectionId , ID.unique() ,{
                     owner ,
+                    ownerName ,
+                    borrowerName ,
                     borrower
                 })
+
+                console.log("chat creation :: " , data2)
                 return data2;
             }
             return data;

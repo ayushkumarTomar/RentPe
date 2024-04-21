@@ -1,114 +1,130 @@
-import React, { useState } from 'react';
-import { Chat, Message } from '@progress/kendo-react-conversational-ui';
 
-interface Messag {
-  id: number;
-  text: string;
+import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import defaultUser from "@/assets/defaultUser.png";
+import AppwriteService from "@/services/appwrite";
+import useAuthStore from "@/store/auth";
+interface convoProp {
+    collectionId: string;
+    createdAt: string;
+    ownerName: string;
+    borrowerName: string;
+    databaseId: string;
+    id: string;
+    permissions: any[];
+    updatedAt: string;
+    borrower: string;
+    borrowerMsgs: any[];
+    owner: string;
+    ownerMsgs: any[];
+
 }
 
-const MyChat: React.FC = () => {
-  const [senderMsg, setSenderMsg] = useState<Message[]>([{ id: 1, text: 'Hello, how can I help you?' }]);
-  const [receiverMsg, setReceiverMsg] = useState<Message[]>([]);
 
-  const addNewSenderMessage = (text: string) => {
-    const newMessage: Messag = { id: senderMsg.length + 1, text };
-    setSenderMsg([...senderMsg, newMessage]);
-  };
+type ChatType = {
+    ownerId : string , 
+    borrowerId: string
+}
 
-  const addNewReceiverMessage = (text: string) => {
-    const newMessage: Messag = { id: receiverMsg.length + 1, text };
-    setReceiverMsg([...receiverMsg, newMessage]);
-  };
+import './index.css'
+import { FaSnapchat } from "react-icons/fa";
 
-  return (
-    <div className="container py-5">
-      <h1 className="mb-4">Chat UI Example</h1>
-      <div className="row">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Sender</h5>
-              {senderMsg.map((msg) => (
-                <div key={msg.id} className="card-text text-end">
-                  <Message author={{ id: 1, name: 'Sender' }} text={msg.text} />
-                </div>
-              ))}
-              <div className="input-group mt-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Type your message..."
-                  aria-label="Type your message..."
-                  aria-describedby="button-send"
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      addNewSenderMessage(e.currentTarget.value);
-                      e.currentTarget.value = '';
-                    }
-                  }}
-                />
-                <button
-                  className="btn btn-primary"
-                  type="button"
-                  id="button-send"
-                  onClick={(e) => {
-                    const input = document.querySelector<HTMLInputElement>('.form-control');
-                    if (input) {
-                      addNewSenderMessage(input.value);
-                      input.value = '';
-                    }
-                  }}
-                >
-                  Send
-                </button>
-              </div>
+import Navbar from "@/components/navbar/Navbar";
+import ChatBox from "@/components/ChatBox";
+
+function Chat() {
+    const [isMobile, setIsMobile] = useState(false);
+
+    const [currentChat , setCurrentChat] = useState<ChatType>()
+
+
+    const [convo, setConvo] = useState<convoProp[]>([])
+
+    const { user } = useAuthStore()
+    const appwrite = new AppwriteService()
+    useEffect(() => {
+
+
+        async function getConvo() {
+
+
+            const convos = await appwrite.getConvo(user?.$id || "null")
+            console.log("getting convos :: from db :: ", convos)
+
+            console.log(convos, " :: ", user?.$id)
+
+            if (convos) {
+                console.log("Settting convos")
+                //@ts-ignore
+
+                setConvo(convos)
+            }
+
+            console.log("Convo :: ", convo)
+
+        }
+
+        getConvo()
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return (
+
+        <>
+            <div className='flex'>
+                <Navbar />
             </div>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Receiver</h5>
-              {receiverMsg.map((msg) => (
-                <div key={msg.id} className="card-text">
-                  <Message author={{ id: 2, name: 'Receiver' }} text={msg.text} />
-                </div>
-              ))}
-              <div className="input-group mt-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Type your message..."
-                  aria-label="Type your message..."
-                  aria-describedby="button-send"
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      addNewReceiverMessage(e.currentTarget.value);
-                      e.currentTarget.value = '';
-                    }
-                  }}
-                />
-                <button
-                  className="btn btn-primary"
-                  type="button"
-                  id="button-send"
-                  onClick={(e) => {
-                    const input = document.querySelector<HTMLInputElement>('.form-control');
-                    if (input) {
-                      addNewReceiverMessage(input.value);
-                      input.value = '';
-                    }
-                  }}
-                >
-                  Send
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+            <div className="profile-container" style={{ marginTop: 80 }}>
+                <div className="custom-sidebar">
+                <Sidebar collapsed={isMobile}>
+                    <Menu>
+                        <div className="sidebar-top">
+                            <Link to="/profile">
+                                <img
+                                    className="rounded-full border-2 bg-yellow-300 me-3 hover:bg-yellow-500 cursor-pointer"
+                                    src={defaultUser}
+                                    alt="userProfileImage"
+                                    width={40}
+                                />
+                            </Link>
+                            {!isMobile && <span>{user?.name}</span>}
+                        </div>
+                        {convo.length > 0 &&
+                            convo.map((element , index:number) => (
+                                <MenuItem  key = {index} onClick = {()=> {setCurrentChat({ownerId:element.owner , borrowerId : element.borrower})}} icon={<FaSnapchat />} >{element.borrower == user?.$id ? element.ownerName : element.borrowerName}</MenuItem>
 
-export default MyChat;
+                            ))
+                        }
+                    </Menu>
+                </Sidebar>
+                
+                </div>
+               
+
+            <div className="other-components">
+            <div className="card" style={{ width: 'auto', height: 'auto', padding: 40 }}>
+
+            {currentChat && <ChatBox  ownerId={currentChat.ownerId} borrowerId={currentChat.borrowerId}/>}
+
+            
+            {!currentChat && <h1 className="card-title" style={{ fontSize: '2.5rem', marginBottom: '20px'  , textAlign:'center'}}>Click to Open Chat</h1> }
+                </div>
+            </div>
+
+        </div >
+      </>
+    );
+}
+
+
+export default Chat
