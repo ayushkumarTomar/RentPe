@@ -1,41 +1,42 @@
 import { Link } from "react-router-dom";
+import { AiOutlinePlus, AiOutlineCheck, AiOutlineHeart } from "react-icons/ai";
+import AppwriteService from "@/services/appwrite";
+import config from "@/config/config";
 
-import { AiOutlinePlus, AiOutlineCheck } from "react-icons/ai";
+const TrendingCard = ({ product }: any) => {
+  const appwrite = new AppwriteService();
 
-const TrendingCard = ({ product }) => {
   return (
     <Link
-      to={`/product/${product._id}`}
-      className="flex flex-col    px-4 py-2 rounded-xl  bg-black/[.06] cursor-pointer gap-3 "
+      to={`/productSpec/${product.$id}`}
+      className="flex flex-col gap-4 px-4 py-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 cursor-pointer"
+      style={{ background: "#F9FAFB" }}
     >
-      <div className="flex justify-between gap-3 xs:flex-wrap xs:justify-center sm:flex-nowrap sm:justify-between">
-        <div>
-          <h1 className="text-xl xs:text-base sm:text-xl font-bold">
-            {product.name}
-          </h1>
-        </div>
-        <div className="flex flex-col items-start ">
-          <div className="flex items-center justify-between">
-            <h1 className=" text-lg xs:text-base sm:text-lg font-bold">
-              ₹{product.price}
-            </h1>
-            <button className="p-0.5 custom-bg-gradient rounded-md ms-2">
-              {product.inCart ? (
-                <AiOutlineCheck className="text-white font-bold text-sm" />
-              ) : (
-                <AiOutlinePlus className="text-white font-bold text-sm" />
-              )}
-            </button>
-          </div>
-          <p className="text-gray-600 text-sm text-end">{product.category}</p>
-        </div>
-      </div>
-      <div className="flex justify-center items-center w-full h-full">
+      {/* Product Image */}
+      <div className="w-full h-44 overflow-hidden rounded-lg">
         <img
-          src={product.image}
+          src={String(appwrite.storage.getFilePreview(config.bucketId, product.images[0]))}
           alt={product.name}
-          className="w-32 h-20 xs:w-28 xs:h-16 sm:w-32 sm:h-20 py-2 object-cover hover:scale-110 transition"
+          className="object-cover w-full h-full transform hover:scale-105 transition duration-300"
         />
+      </div>
+
+      {/* Product Details */}
+      <div className="flex flex-col justify-between flex-1">
+        <div>
+          <h1 className="text-lg font-semibold text-gray-800">{product.name}</h1>
+          <p className="mt-1 text-sm text-gray-600">{product.category}</p>
+        </div>
+        <div className="flex items-center justify-between mt-3">
+          <h1 className="text-lg font-semibold text-indigo-600">₹{product.price>2000 ? (product.price/40).toFixed(0) : product.price} per Day</h1>
+          <button className="p-2 rounded-full bg-indigo-500 text-white hover:bg-indigo-600 transition duration-300">
+            {product.inCart ? (
+              <AiOutlineHeart className="text-lg" />
+            ) : (
+              <AiOutlineHeart className="text-lg" />
+            )}
+          </button>
+        </div>
       </div>
     </Link>
   );

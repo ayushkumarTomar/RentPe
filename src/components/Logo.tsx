@@ -4,7 +4,7 @@ const Logo = () => {
   return (
     <Link to="/">
       <div className="font-monoton text-3xl hover:text-red-800 cursor-pointer text-center transition">
-        EzRental
+        RentPe
       </div>
     </Link>
   );

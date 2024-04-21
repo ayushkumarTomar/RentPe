@@ -6,12 +6,17 @@ import ProtectedRoutes from '@/ProtectedPages/Protected'
 import "./custom.styles.css";
 import Signup from './pages/Signup'
 import Login from './pages/Login'
-import Product from './pages/Product'
+import ProductPage from './pages/Product';
 import Profile from './components/profile/Profile';
 import ListItem from './pages/ListItem';
 
+import CategoriesScroll from './components/trending/AllProducts';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NotFoundPage from './pages/NotFound';
+
+import Chat from './pages/Chat';
 
 function App() {
 
@@ -28,11 +33,19 @@ function App() {
 			<Route path="/login" element={<Login />} />
 			<Route path="/signup" element={<Signup />} />
 
+			<Route path="/products" element={<CategoriesScroll />} />
+
+			<Route path="/not-found" element={<NotFoundPage />} />
+			<Route path="/productSpec/:productId" element={<ProductPage/>}/>
+
+
+
+
 			<Route element={<ProtectedRoutes />}>
               <Route path="/" element={<Home/>}/>
-              <Route path="/product" element={<Product/>}/>
 			  <Route path="/profile" element={<Profile/>}/>
 			  <Route path="/list-item" element={<ListItem/>}/>
+			  <Route path="/chat" element={<Chat/>}/>
 
 			</Route>
 		  </Routes>

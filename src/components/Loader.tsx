@@ -12,12 +12,11 @@ const Loader = () => {
         />
       </span>
       <div className="text-container">
+        <span className="letter">R</span>
         <span className="letter">E</span>
-        <span className="letter">Y</span>
-        <span className="letter">E</span>
-        <span className="letter">S</span>
-        <span className="letter">O</span>
-        <span className="letter">M</span>
+        <span className="letter">N</span>
+        <span className="letter">T</span>
+        <span className="letter">P</span>
         <span className="letter">E</span>
       </div>
     </div>

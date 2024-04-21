@@ -153,6 +153,7 @@ class AppwriteService {
             return (await this.database.listDocuments(APPWRITE_DATABASE_ID , config.productsCollectionId , [Query.equal('borrower' , [userID])])).documents
         } catch (error) {
             console.log("borrow error ::: " , error)
+            return false
         }
 
     }
@@ -162,8 +163,68 @@ class AppwriteService {
             return (await this.database.listDocuments(APPWRITE_DATABASE_ID , config.productsCollectionId , [Query.equal('owner' , [userID])])).documents
         } catch (error) {
             console.log("borrow error ::: " , error)
+            return false
         }
 
+    }
+
+    async getAllProducts(){
+        try {
+            return (await this.database.listDocuments(APPWRITE_DATABASE_ID , config.productsCollectionId , [Query.limit(99)])).documents
+        } catch (error) {
+            console.log("all product error ::: " , error)
+            return false
+
+            
+        }
+    }
+
+    async getCategory(category:string){
+
+        try {
+            return (await this.database.listDocuments(APPWRITE_DATABASE_ID , config.productsCollectionId , [Query.equal('category' , [category])])).documents
+        } catch (error) {
+            console.log("all product error ::: " , error)
+            return false
+
+            
+        }
+
+    }
+
+    async getProduct(productId:string){
+         try {
+            const dd = await this.database.getDocument(APPWRITE_DATABASE_ID , config.productsCollectionId , productId)
+
+            console.log(dd)
+            return dd
+        } catch (error) {
+            console.log("all product error ::: " , error)
+            return false
+
+            
+        }
+        
+    }
+
+    async getChat(owner:string , borrower:string){
+        try {
+            
+
+            const data = await this.database.listDocuments(APPWRITE_DATABASE_ID , config.chatCollectionId , [Query.equal("owner" , [owner]) , Query.equal("borrower" , [borrower])])
+            if(data.total<1){
+                const data2 = await this.database.createDocument(APPWRITE_DATABASE_ID , config.chatCollectionId , ID.unique() ,{
+                    owner ,
+                    borrower
+                })
+                return data2;
+            }
+            return data;
+        
+        } catch (error) {
+                console.log("Error getting chat :: " ,error)
+                return false
+        }
     }
 
 }

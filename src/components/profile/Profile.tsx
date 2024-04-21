@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GiRotaryPhone } from "react-icons/gi";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import defaultUser from "../../assets/defaultUser.png";
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { FaUserCircle, FaComments, FaCog, FaUsers, FaStar } from 'react-icons/fa';
@@ -54,6 +54,8 @@ function SideBar({ username }: { username: string }) {
 export { SideBar };
 
 export default function Profile() {
+
+  const navigator = useNavigate()
   const { user } = useAuthStore();
   const [borrow, setBorrow] = useState<any[]>([]);
   const [rented, setRented] = useState<any[]>([]);
@@ -72,7 +74,10 @@ export default function Profile() {
 
     fetchData();
   }, [user]);
-
+  const logout = async()=>{
+    await appwrite.logout()
+    navigator('/login')
+  }
 
 
   return (
@@ -112,8 +117,10 @@ export default function Profile() {
                   <p className="card-text" style={{ marginBottom: '0' }}>{user?.phone}</p> {/* Phone number */}
                 </div>
                 <div className="d-flex justify-content-start"> {/* Use flexbox to space buttons */}
-                 <Link to ='/'> <button type="button" className="btn btn-primary" style={{ marginRight: '10px' }}>Borrow</button></Link>
+                 <Link to ='/products'> <button type="button" className="btn btn-primary" style={{ marginRight: '10px' }}>Borrow</button></Link>
                   <Link to = "/list-item"><button type="button" className="btn btn-primary">Rent</button></Link>
+                  <Link to = "/list-item"><button type="button" style={{marginLeft:10}}  onClick={logout} className="btn btn-primary">Logout</button></Link>
+
                 </div>
               </div>
             </div>
@@ -141,7 +148,7 @@ export default function Profile() {
                     <tr key={element.$id}>
                       <td>{element?.name}</td>
                       <td>{element.owner || "Pending"}</td>
-                      <td>{element.price}</td>
+                      <td>{element.price>2000 ? (element.price/0).toFixed(0): element.price}</td>
                       <td>{element.date}</td>
 
                     </tr>
@@ -165,7 +172,7 @@ export default function Profile() {
                     <tr key={element.$id}>
                     <td>{element?.name}</td>
                       <td>{element.borrower || "Pending"}</td>
-                      <td>{element.price}</td>
+                      <td>{element.price>2000 ? (element.price/0).toFixed(0) : element.price}</td>
                       <td>{element.date}</td>
 
                     </tr>
