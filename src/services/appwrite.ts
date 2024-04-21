@@ -325,6 +325,15 @@ class AppwriteService {
         return xd
     }
 
+    async searchProducts(query:string){
+
+        const xd = await this.database.listDocuments(APPWRITE_DATABASE_ID , config.productsCollectionId ,[Query.search("name" , query)] )
+
+        console.log("Searched :: " , xd
+        )
+        return xd
+    }
+
 }
 
 export default AppwriteService

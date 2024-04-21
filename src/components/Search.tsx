@@ -26,7 +26,7 @@ function Search() {
         placeholder="Search Glasses"
         onChange={(e)=>setSearch(e.target.value)}
       />
-      <button type="submit" className="cursor-pointer">
+      <button type="submit" className="cursor-pointer" onClick={submitHandler}>
         <CiSearch />
       </button>
     </form>

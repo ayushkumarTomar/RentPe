@@ -18,6 +18,7 @@ import NotFoundPage from './pages/NotFound';
 
 import Chat from './pages/Chat';
 
+import SearchProduct from '@/components/trending/SearchProducts';
 import WishlistPage from './pages/WishList';
 function App() {
 
@@ -26,7 +27,7 @@ function App() {
 	return (
 		
 		<BrowserRouter>
-		        <ToastContainer />
+		<ToastContainer />
 
 		{/* Wrap the routes with AuthProvider */}
 		<AuthProvider>
@@ -38,6 +39,7 @@ function App() {
 
 			<Route path="/not-found" element={<NotFoundPage />} />
 			<Route path="/productSpec/:productId" element={<ProductPage/>}/>
+			<Route path="/search/:productQuery" element={<SearchProduct/>}/>
 
 
 
